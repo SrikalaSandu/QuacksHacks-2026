@@ -1,0 +1,54 @@
+/* CompletionRateCard.css */
+.crc-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.donut-svg {
+  flex-shrink: 0;
+}
+
+.donut-label {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  fill: var(--text-dark);
+}
+
+.crc-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.crc-label {
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.crc-sub {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+}
+
+.crc-timeframe {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.crc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1rem 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.crc-empty span {
+  font-size: 1.8rem;
+}

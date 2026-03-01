@@ -1,0 +1,163 @@
+/* Dashboard.css */
+:root {
+  --primary: #C7EABB;
+  --primary-light: #E8F8D8;
+  --white: #FFFFFF;
+  --text-dark: #1a1a1a;
+  --text-mid: #444444;
+  --text-light: #888888;
+  --border: #dcdcdc;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  background: #FFFFFF;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 2rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-container {
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+  }
+}
+
+.dashboard-main {
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-main {
+    max-height: calc(100vh - 4rem);
+  }
+}
+
+.dashboard-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dashboard-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard-main::-webkit-scrollbar-thumb {
+  background: #d4e5c0;
+  border-radius: 3px;
+}
+
+.dashboard-main::-webkit-scrollbar-thumb:hover {
+  background: #b8d9a0;
+}
+
+.dashboard-chat {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-chat {
+    height: calc(100vh - 4rem);
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+/* Cards - shared styling */
+.card {
+  background: #FFFFFF;
+  border: 1px solid #d4e5c0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Buttons - shared styling */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: capitalize;
+}
+
+.btn-primary {
+  background: #C7EABB;
+  color: #2d5016;
+  border: 1px solid #9ec978;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #9ec978;
+  box-shadow: 0 4px 12px rgba(199, 234, 187, 0.3);
+}
+
+.btn-secondary {
+  background: #f0f8e8;
+  color: #5a7c3e;
+  border: 1px solid #d4e5c0;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #d4e5c0;
+}
+
+.btn-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #fca5a5;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+}
+
+.btn-full {
+  width: 100%;
+  display: block;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1.5rem 1rem;
+    gap: 1.5rem;
+  }
+
+  .dashboard-chat {
+    height: 400px;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+}

@@ -1,0 +1,149 @@
+/* components/VoiceCheckinCard.css */
+.voice-checkin-card {
+  margin-bottom: 2rem;
+}
+
+.voice-header {
+  margin-bottom: 1.5rem;
+}
+
+.voice-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d5016;
+  margin: 0 0 0.5rem 0;
+}
+
+.voice-subtitle {
+  font-size: 0.9rem;
+  color: #6b8a4a;
+  margin: 0;
+}
+
+.voice-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.transcript-preview {
+  background: #f5f9f0;
+  border: 1px solid #d4e5c0;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.transcript-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b8a4a;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.transcript-text {
+  font-size: 0.95rem;
+  color: #2d5016;
+  line-height: 1.6;
+  min-height: 60px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f0f8e8;
+  border-radius: 8px;
+  color: #5a7c3e;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #C7EABB;
+  border-top-color: #5a7c3e;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.analysis-result {
+  background: #f8fdf5;
+  border: 2px solid #C7EABB;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.result-section {
+  margin-bottom: 1.5rem;
+}
+
+.result-section h3 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #6b8a4a;
+  margin: 0 0 0.75rem 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.result-section p {
+  color: #2d5016;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.result-item {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #d4e5c0;
+}
+
+.result-item label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #6b8a4a;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.result-value {
+  margin: 0;
+  color: #2d5016;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.result-question {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #C7EABB;
+}
+
+.result-question p {
+  margin: 0;
+  color: #2d5016;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}

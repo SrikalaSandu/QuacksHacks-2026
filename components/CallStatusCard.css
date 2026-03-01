@@ -1,0 +1,93 @@
+/* components/CallStatusCard.css */
+.call-status-card {
+  margin-bottom: 2rem;
+}
+
+.call-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.call-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d5016;
+  margin: 0;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.call-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f5f9f0;
+  border-radius: 12px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail-item label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #6b8a4a;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.detail-item p {
+  margin: 0;
+  color: #2d5016;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.call-info {
+  background: linear-gradient(135deg, #E8F8D8 0%, #f0f8e8 100%);
+  border: 1px solid #d4e5c0;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.call-info p {
+  margin: 0;
+  color: #2d5016;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.call-note {
+  background: #f0f4ff;
+  border-left: 4px solid #93c5fd;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+}
+
+.call-note p {
+  margin: 0;
+  color: #1e40af;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}

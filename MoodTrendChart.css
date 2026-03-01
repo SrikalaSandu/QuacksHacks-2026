@@ -1,0 +1,38 @@
+/* MoodTrendChart.css */
+.mood-trend-chart {
+  width: 100%;
+}
+
+.mood-tooltip {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.82rem;
+}
+
+.mood-tooltip-date {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-bottom: 0.1rem;
+}
+
+.mood-tooltip-mood {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.chart-empty-icon {
+  font-size: 1.8rem;
+}
