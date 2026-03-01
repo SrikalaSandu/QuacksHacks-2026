@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Emotional Companion</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        :root {
+            --primary: #C7EABB;
+            --text-dark: #2d3748;
+            --text-soft: #718096;
+            --border: #e2e8f0;
+            --bg: #E8F5BD;
+            --card-bg: #FFFFFF;
+            --success: #68D391;
+            --danger: #FC8181;
+            --transition: 150ms ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .db-root {
+            min-height: 100vh;
+        }
+
+        .mobile-tabs {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .mobile-tab {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .mobile-tab.active {
+            background: var(--primary);
+            font-weight: 600;
+        }
+
+        .db-layout {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.25rem;
+            padding-bottom: 5rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .db-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .db-right {
+            width: 400px;
+            position: sticky;
+            top: 1rem;
+            height: calc(100vh - 2rem);
+        }
+
+        .mobile-hidden {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .mobile-tabs {
+                display: none;
+            }
+            .mobile-hidden {
+                display: flex;
+            }
+            .db-left, .db-right {
+                display: flex !important;
+            }
+        }
+
+        @media (max-width: 1023px) {
+            .db-layout {
+                flex-direction: column;
+            }
+            .db-right {
+                width: 100%;
+                position: static;
+                height: auto;
+            }
+        }
+
+        .db-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .greeting-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+        }
+
+        .greeting-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-dark);
+        }
+
+        .greeting-date {
+            color: var(--text-soft);
+            font-size: 0.9rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .btn {
+            padding: 0.65rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .voice-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .voice-buttons button {
+            flex: 1;
+        }
+
+        .voice-status {
+            background: #f7fafc;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            color: var(--text-soft);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-analyze {
+            width: 100%;
+            background: var(--success);
+            color: white;
+        }
+
+        .bottom-row {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .bottom-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .chat-widget {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .chat-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-dark);
+        }
+
+        .chat-header-icons {
+            display: flex;
+            gap: 0.75rem;
+            color: var(--text-soft);
+            font-size: 1.1rem;
+        }
+
+        .chat-mode-toggle {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .mode-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-soft);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-message {
+            max-width: 85%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            background: #f7fafc;
+            color: var(--text-dark);
+        }
+
+        .chat-message.assistant {
+            align-self: flex-start;
+            background: #f7fafc;
+            color: var(--text-dark);
+        }
+
+        .chat-message-label {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .ai-summary {
+            background: #f7fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0 1.25rem 1rem 1.25rem;
+        }
+
+        .ai-summary-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .ai-summary-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .ai-summary-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .ai-check {
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        .ai-summary-text {
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .chat-input-area {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-send {
+            background: var(--success);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-send:hover {
+            opacity: 0.9;
+        }
+
+        .chat-widget.future-call {
+            background: #C7EABB;
+        }
+
+        .future-call-panel {
+            flex: 1;
+            width: 100%;
+            margin: 0;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .call-avatar {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid #9ed8a0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .call-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .call-subtitle {
+            color: var(--text-soft);
+            font-size: 0.9rem;
+        }
+
+        .call-timer {
+            margin-top: 0.25rem;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.35rem 0.9rem;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .call-controls {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .call-control-btn {
+            border: none;
+            border-radius: 10px;
+            padding: 0.55rem 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .call-control-btn.mute {
+            background: #ffffff;
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+        }
+
+        .call-control-btn.end {
+            background: var(--danger);
+            color: #ffffff;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-neutral {
+            background: #f5f5f5;
+            color: var(--text-soft);
+        }
+
+        .insights-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 2fr 1fr 1fr;
+        }
+
+        @media (max-width: 768px) {
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .insight-box {
+            padding: 1.25rem;
+            background: #f7fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .insight-label {
+            font-size: 0.85rem;
+            color: var(--text-soft);
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .insight-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .insight-sublabel {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            margin-top: 0.25rem;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 80px;
+            margin-top: 0.5rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: var(--primary);
+            border-radius: 4px 4px 0 0;
+            min-height: 20%;
+            transition: all 0.3s ease;
+        }
+
+        .streak-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .recent-checkins {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkin-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .checkin-emoji {
+            font-size: 1.25rem;
+        }
+
+        .checkin-info {
+            flex: 1;
+            color: var(--text-dark);
+        }
+
+        .checkin-status {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+        }
+
+        .call-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .call-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .call-info-label {
+            color: var(--text-soft);
+        }
+
+        .call-info-value {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .call-status-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .bottom-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function todayLabel() {
+            return new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+        }
+
+        // Mock user data
+        const mockUser = {
+            name: "Sarah",
+            goals: ["Finish hackathon MVP", "Sleep 7+ hours", "Run 3x/week"],
+            habits: ["Morning water", "5-min journaling", "No doomscroll after 11pm"],
+            checkInTime: "9:00 PM",
+            timezone: "America/New_York",
+        };
+
+        function VoiceCheckIn({ userId }) {
+            const [voiceState, setVoiceState] = useState("idle");
+            const [isRecording, setIsRecording] = useState(false);
+
+            const startRecording = () => {
+                setIsRecording(true);
+                setVoiceState("listening");
+            };
+
+            const stopRecording = () => {
+                setIsRecording(false);
+                setVoiceState("idle");
+            };
+
+            const sendForAnalysis = () => {
+                setVoiceState("processing");
+                setTimeout(() => setVoiceState("idle"), 2000);
+            };
+
+            return (
+                <div className="db-card">
+                    <h2 className="card-title">Voice Check-In</h2>
+                    <div className="voice-buttons">
+                        <button 
+                            className="btn btn-primary" 
+                            onClick={startRecording}
+                            disabled={isRecording}
+                        >
+                            Start
+                        </button>
+                        <button 
+                            className="btn btn-danger" 
+                            onClick={stopRecording}
+                            disabled={!isRecording}
+                        >
+                            Stop
+                        </button>
+                    </div>
+                    {voiceState !== "idle" && (
+                        <div className="voice-status">
+                            {voiceState === "listening" && "Listening..."}
+                            {voiceState === "processing" && "Processing..."}
+                        </div>
+                    )}
+                    <button 
+                        className="btn btn-analyze" 
+                        onClick={sendForAnalysis}
+                    >
+                        Send for Analysis
+                    </button>
+                </div>
+            );
+        }
+
+        function InsightsPreview({ userId }) {
+            const chartHeights = [40, 50, 45, 55, 60, 50, 70, 65, 75, 80];
+
+            return (
+                <div className="db-card">
+                    <h2 className="card-title">Insights</h2>
+                    <div className="insights-grid">
+                        <div className="insight-box">
+                            <div className="insight-label">Mood Trend</div>
+                            <div className="chart-bars">
+                                {chartHeights.map((height, i) => (
+                                    <div 
+                                        key={i} 
+                                        className="chart-bar" 
+                                        style={{ height: `${height}%` }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="insight-box">
+                            <div className="insight-label">Completion Rate</div>
+                            <div className="insight-value">82%</div>
+                            <div className="insight-sublabel">Completed</div>
+                        </div>
+                        <div className="insight-box">
+                            <div className="insight-label">Streak</div>
+                            <div className="streak-icon">⭐</div>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--text-soft)' }}>Current Streak:</div>
+                            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--text-dark)' }}>5 Days</div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function RecentCheckIns({ userId }) {
+            const checkIns = [
+                { emoji: "😊", mood: "Great", time: "Today, 10:15 AM", status: "Completed" },
+                { emoji: "😊", mood: "Okay", time: "Yesterday", status: "Pending" },
+                { emoji: "😢", mood: "Sad", time: "Feb 26, 2:00 PM", status: "Completed" },
+            ];
+
+            return (
+                <div className="db-card">
+                    <h2 className="card-title">Recent Check-Ins</h2>
+                    <div className="recent-checkins">
+                        {checkIns.map((item, i) => (
+                            <div key={i} className="checkin-item">
+                                <span className="checkin-emoji">{item.emoji}</span>
+                                <div style={{ flex: 1 }}>
+                                    <div className="checkin-info">
+                                        <strong>{item.mood}</strong> - {item.time}
+                                    </div>
+                                    <div className="checkin-status">{item.status}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        function CallStatus({ user }) {
+            const [callState, setCallState] = useState("idle");
+
+            return (
+                <div className="db-card">
+                    <h2 className="card-title">Call Status</h2>
+                    <div className="call-info">
+                        <div className="call-info-row">
+                            <span className="call-info-label">Next Check-In:</span>
+                            <span className="call-info-value">7:00 PM</span>
+                        </div>
+                        <div className="call-info-row">
+                            <span className="call-info-label">Number:</span>
+                            <span className="call-info-value">+1 (555) 123-4567</span>
+                        </div>
+                    </div>
+                    <button 
+                        className="btn btn-secondary" 
+                        style={{ width: '100%' }}
+                        onClick={() => setCallState(s => s === "idle" ? "scheduled" : "idle")}
+                    >
+                        {callState === "idle" ? "Idle" : "Scheduled"}
+                    </button>
+                    <button
+                        className="btn btn-danger"
+                        style={{ width: '100%', marginTop: '0.5rem' }}
+                    >
+                        Call Now
+                    </button>
+                </div>
+            );
+        }
+
+        function ChatWidget({ userId, userName }) {
+            const [chatMode, setChatMode] = useState("normal");
+            const [messages, setMessages] = useState([
+                {
+                    role: "user",
+                    text: "I feel stressed today.",
+                    ts: Date.now() - 1000 * 60 * 5,
+                },
+                {
+                    role: "assistant",
+                    text: "I'm here for you. Maybe a short walk could help you relax.",
+                    ts: Date.now() - 1000 * 60 * 4,
+                },
+            ]);
+            const [draft, setDraft] = useState("");
+            const [callSeconds, setCallSeconds] = useState(0);
+
+            const sendChat = () => {
+                const text = draft.trim();
+                if (!text) return;
+                setDraft("");
+                setMessages(m => [...m, { role: "user", text, ts: Date.now() }]);
+
+                setTimeout(() => {
+                    setMessages(m => [
+                        ...m,
+                        {
+                            role: "assistant",
+                            text: "I understand. Let's break that down into a small step you can take right now.",
+                            ts: Date.now(),
+                        },
+                    ]);
+                }, 500);
+            };
+
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendChat();
+                }
+            };
+
+            const isFutureCall = chatMode === 'future';
+
+            useEffect(() => {
+                if (!isFutureCall) return;
+
+                const timerId = setInterval(() => {
+                    setCallSeconds((prev) => prev + 1);
+                }, 1000);
+
+                return () => clearInterval(timerId);
+            }, [isFutureCall]);
+
+            const formatCallTime = (totalSeconds) => {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            };
+
+            const startFutureCall = () => {
+                setCallSeconds(0);
+                setChatMode('future');
+            };
+
+            const endFutureCall = () => {
+                setChatMode('normal');
+            };
+
+            return (
+                <div className={`chat-widget ${isFutureCall ? 'future-call' : ''}`}>
+                    <div className="chat-header">
+                        <span>Companion Chat</span>
+                        <div className="chat-header-icons">
+                            <span>🔔</span>
+                            <span>☰</span>
+                        </div>
+                    </div>
+                    <div className="chat-mode-toggle">
+                        <button 
+                            className={`mode-btn ${chatMode === 'normal' ? 'active' : ''}`}
+                            onClick={() => setChatMode('normal')}
+                        >
+                            Normal
+                        </button>
+                        <button 
+                            className={`mode-btn ${chatMode === 'future' ? 'active' : ''}`}
+                            onClick={startFutureCall}
+                        >
+                            Future Call
+                        </button>
+                    </div>
+
+                    {isFutureCall ? (
+                        <div className="future-call-panel">
+                            <div className="call-avatar">🎧</div>
+                            <div className="call-title">Future Self Voice Call</div>
+                            <div className="call-subtitle">Connected • Reflective coaching mode</div>
+                            <div className="call-timer">{formatCallTime(callSeconds)}</div>
+                            <div className="call-controls">
+                                <button className="call-control-btn mute">Mute</button>
+                                <button className="call-control-btn end" onClick={endFutureCall}>End Call</button>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="chat-messages">
+                                {messages.map((msg, idx) => (
+                                    <div key={idx}>
+                                        <div className="chat-message-label">
+                                            {msg.role === 'user' ? 'Sarah:' : 'AI:'}
+                                        </div>
+                                        <div className={`chat-message ${msg.role}`}>
+                                            {msg.text}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="ai-summary">
+                                <div className="ai-summary-title">AI Summary</div>
+                                <div className="ai-summary-item">
+                                    <span className="ai-check">✓</span>
+                                    <span className="ai-summary-text"><strong>Mood:</strong> Stressed</span>
+                                </div>
+                                <div className="ai-summary-item">
+                                    <span className="ai-check">✓</span>
+                                    <span className="ai-summary-text"><strong>Micro-Action:</strong> Take a short walk</span>
+                                </div>
+                                <div className="ai-summary-item">
+                                    <span className="ai-check">✓</span>
+                                    <span className="ai-summary-text"><strong>Next Step:</strong> How about giving it a try?</span>
+                                </div>
+                            </div>
+                            <div className="chat-input-area">
+                                <input
+                                    type="text"
+                                    className="chat-input"
+                                    value={draft}
+                                    onChange={(e) => setDraft(e.target.value)}
+                                    onKeyPress={handleKeyPress}
+                                    placeholder="Type a message..."
+                                />
+                                <button className="btn-send" onClick={sendChat}>
+                                    Send
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            );
+        }
+
+        function Dashboard() {
+            const [mobileTab, setMobileTab] = useState('dashboard');
+            const [user, setUser] = useState(null);
+
+            useEffect(() => {
+                // Simulate loading user data
+                setTimeout(() => {
+                    setUser(mockUser);
+                }, 100);
+            }, []);
+
+            if (!user) {
+                return (
+                    <div className="db-root">
+                        <div style={{ padding: '2rem', textAlign: 'center' }}>
+                            <p>Loading...</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="db-root">
+                    {/* Mobile tab bar */}
+                    <div className="mobile-tabs">
+                        <button
+                            className={`mobile-tab ${mobileTab === 'dashboard' ? 'active' : ''}`}
+                            onClick={() => setMobileTab('dashboard')}
+                        >
+                            🏠 Dashboard
+                        </button>
+                        <button
+                            className={`mobile-tab ${mobileTab === 'chat' ? 'active' : ''}`}
+                            onClick={() => setMobileTab('chat')}
+                        >
+                            💬 Chat
+                        </button>
+                    </div>
+
+                    <div className="db-layout">
+                        {/* Left Column */}
+                        <div className={`db-left ${mobileTab === 'chat' ? 'mobile-hidden' : ''}`}>
+                            {/* Greeting */}
+                            <div className="db-card greeting-card">
+                                <h1 className="greeting-name">Hi {user.name} 👋</h1>
+                                <p className="greeting-date">{todayLabel()}</p>
+                            </div>
+
+                            {/* Voice Check-in */}
+                            <VoiceCheckIn userId="mock-user" />
+
+                            {/* Insights */}
+                            <InsightsPreview userId="mock-user" />
+
+                            {/* Bottom row */}
+                            <div className="bottom-row">
+                                <RecentCheckIns userId="mock-user" />
+                                <CallStatus user={user} />
+                            </div>
+                        </div>
+
+                        {/* Right Column - Chat */}
+                        <div className={`db-right ${mobileTab === 'dashboard' ? 'mobile-hidden' : ''}`}>
+                            <ChatWidget userId="mock-user" userName={user.name} />
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Dashboard />);
+    </script>
+</body>
+</html>
